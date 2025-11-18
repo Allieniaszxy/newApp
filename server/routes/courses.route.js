@@ -5,15 +5,27 @@ courseRouter.get(
   "/all",
   require("../controllers/course.controller").getAllCourses
 );
-courseRouter.get(
-  "/:id",
-  require("../controllers/course.controller").getSingleCourse
-);
 
 courseRouter.get(
   "/lectures/:id",
   isAuth,
   require("../controllers/course.controller").fetchLectures
+);
+
+courseRouter.get(
+  "/lecture/:id",
+  isAuth,
+  require("../controllers/course.controller").fetchLecture
+);
+
+courseRouter.get(
+  "/mycourses",
+  isAuth,
+  require("../controllers/course.controller").getMyCourses
+);
+courseRouter.get(
+  "/:id",
+  require("../controllers/course.controller").getSingleCourse
 );
 // courseRouter.put(
 //   "/update/:id",

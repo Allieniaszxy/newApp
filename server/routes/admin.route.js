@@ -20,4 +20,24 @@ adminRouter.post(
   require("../controllers/admin.controller").addLecture
 );
 
+adminRouter.delete(
+  "/lecture/:id/delete",
+  isAuth,
+  isAdmin,
+  require("../controllers/admin.controller").deleteLecture
+);
+
+adminRouter.delete(
+  "/:id/delete",
+  isAuth,
+  isAdmin,
+  require("../controllers/admin.controller").deleteCourse
+);
+
+adminRouter.get(
+  "/stats",
+  isAuth,
+  isAdmin,
+  require("../controllers/admin.controller").getAllStats
+);
 module.exports = adminRouter;
