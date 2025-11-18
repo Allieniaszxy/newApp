@@ -1,5 +1,27 @@
-const TryCatch = require("../middlewares/tryCatch");
+const TryCatch = require("../middlewares/TryCatch");
 const Course = require("../models/courses.model");
+
+const createCourse = TryCatch(async (req, res) => {
+  const { title, description, createdBy, price, category, duration } = req.body;
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).json({ message: "Course image is required" });
+  }
+
+  const newCourse = await Course.create({
+    title,
+    description,
+    createdBy,
+    price,
+    category,
+    image: file?.path,
+    duration,
+  });
+  res
+    .status(201)
+    .json({ message: "Course created successfully", course: newCourse });
+});
 
 const addLecture = TryCatch(async (req, res) => {
   const course = await Course.findById(req.params.id);
@@ -24,5 +46,6 @@ const addLecture = TryCatch(async (req, res) => {
 });
 
 module.exports = {
+  createCourse,
   addLecture,
 };

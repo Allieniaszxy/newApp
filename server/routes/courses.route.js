@@ -1,32 +1,20 @@
 const express = require("express");
-const { isAuth, isAdmin } = require("../middlewares/isAuth");
-const upload = require("../middlewares/multer");
-// const { createCourse } = require("../controllers/course.controller");
 const courseRouter = express.Router();
-
-courseRouter.post(
-  "/create",
-  isAuth,
-  isAdmin,
-  upload,
-  require("../controllers/course.controller").createCourse
+const { isAuth } = require("../middlewares/isAuth");
+courseRouter.get(
+  "/all",
+  require("../controllers/course.controller").getAllCourses
+);
+courseRouter.get(
+  "/:id",
+  require("../controllers/course.controller").getSingleCourse
 );
 
-courseRouter.post(
-  "/:id/add-lecture",
+courseRouter.get(
+  "/lectures/:id",
   isAuth,
-  isAdmin,
-  upload,
-  require("../controllers/admin.controller").addLecture
+  require("../controllers/course.controller").fetchLectures
 );
-// courseRouter.get(
-//   "/all",
-//   require("../controllers/courses.controller").getAllCourses
-// );
-// courseRouter.get(
-//   "/:id",
-//   require("../controllers/courses.controller").getCourseById
-// );
 // courseRouter.put(
 //   "/update/:id",
 //   require("../controllers/courses.controller").updateCourse
@@ -35,7 +23,7 @@ courseRouter.post(
 //   "/delete/:id",
 //   require("../controllers/courses.controller").deleteCourse
 // );
-module.exports = courseRouter;
+
 // const { createCourse, getAllCourses, getCourseById, updateCourse, deleteCourse } = require("../controllers/courses.controller");
 
 // courseRouter.post("/create", createCourse);
@@ -45,3 +33,4 @@ module.exports = courseRouter;
 // courseRouter.delete("/delete/:id", deleteCourse);
 
 // module.exports = courseRouter;
+module.exports = courseRouter;
