@@ -27,6 +27,18 @@ courseRouter.get(
   "/:id",
   require("../controllers/course.controller").getSingleCourse
 );
+
+courseRouter.post(
+  "/course/checkout/:id",
+  isAuth,
+  require("../controllers/course.controller").checkOut
+);
+
+courseRouter.post(
+  "/verification",
+  isAuth,
+  require("../controllers/course.controller").paymentVerification
+);
 // courseRouter.put(
 //   "/update/:id",
 //   require("../controllers/courses.controller").updateCourse

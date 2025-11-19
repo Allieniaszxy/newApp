@@ -2,12 +2,14 @@ const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const Paystack = require("paystack-api");
+const cors = require("cors");
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cors());
 
 export const instance = new Paystack({
   key_id: process.env.PAYSTACK_KEY_ID,

@@ -3,6 +3,8 @@ const TryCatch = require("../middlewares/TryCatch");
 const Lecture = require("../models/lectures.model");
 const User = require("../models/user.model");
 const { instance } = require("../index");
+const crypto = require("crypto");
+const Payment = require("../models/payment");
 
 const getAllCourses = TryCatch(async (req, res) => {
   const courses = await Course.find();
@@ -104,10 +106,41 @@ const checkOut = TryCatch(async (req, res) => {
   res.status(200).json({ course, order });
 });
 
+const paymentVerification = TryCatch(async (req, res) => {
+  // Implementation for payment verification
+  const { paystack_order_id, paystack_payment_id, paystack_signature } =
+    req.body;
+
+  const body = paystack_order_id + "|" + paystack_payment_id;
+
+  const expectedSignature = crypto
+    .createHmac("sha256", process.env.PAYSTACK_SECRET)
+    .update(body.toString())
+    .digest("hex");
+  if (expectedSignature === paystack_signature) {
+    await Payment.create({
+      paystack_order_id,
+      paystack_payment_id,
+      paystack_signature,
+    });
+
+    const user = await User.findById(req.user._id);
+    const course = await Course.findById(req.params.id);
+
+    user.subscription.push(course._id);
+    await user.save();
+    return res.status(200).json({ message: "Payment verified successfully" });
+  } else {
+    return res.status(400).json({ message: "Invalid signature" });
+  }
+});
+
 module.exports = {
   getAllCourses,
   getSingleCourse,
   fetchLectures,
   fetchLecture,
   getMyCourses,
+  checkOut,
+  paymentVerification,
 };
