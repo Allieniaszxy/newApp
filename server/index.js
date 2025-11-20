@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 
-export const instance = new Paystack({
+const instance = new Paystack({
   key_id: process.env.PAYSTACK_KEY_ID,
   secret_key: process.env.PAYSTACK_SECRET_KEY,
 });
@@ -27,3 +27,5 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
   connectDB();
 });
+
+module.exports = instance;

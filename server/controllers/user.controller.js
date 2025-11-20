@@ -23,7 +23,7 @@ const registerUser = TryCatch(async (req, res) => {
       otp,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "5m" }
+    { expiresIn: "30m" }
   );
 
   await sendMail(email, "Account Activation OTP", { name, otp });

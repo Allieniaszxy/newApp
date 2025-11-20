@@ -4,18 +4,36 @@ import Header from "./static/Header";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Verify from "./pages/auth/Verify";
-import Footer from "./components/blocks/Footer";
+import Footer from "./static/Footer";
+import AboutPage from "./pages/about/About";
+import Account from "./pages/account/Account";
+import { UserData } from "./context/UserContext";
 
 function App() {
+  const { isAuthenticated, user } = UserData();
   return (
     <>
       <BrowserRouter>
-        <Header />
+        <Header isAuthenticated={isAuthenticated} />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify" element={<Verify />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route
+            path="/account"
+            element={isAuthenticated ? <Account user={user} /> : <Login />}
+          />
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Home /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={isAuthenticated ? <Home /> : <Register />}
+          />
+          <Route
+            path="/verify"
+            element={isAuthenticated ? <Home /> : <Verify />}
+          />
         </Routes>
         <Footer />
       </BrowserRouter>
