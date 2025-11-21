@@ -23,7 +23,7 @@ const registerUser = TryCatch(async (req, res) => {
       otp,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "30m" }
+    { expiresIn: "1h" }
   );
 
   await sendMail(email, "Account Activation OTP", { name, otp });
@@ -73,7 +73,7 @@ const loginUser = TryCatch(async (req, res) => {
   const token = jwt.sign(
     { userId: user._id, email: user.email },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "7d" }
   );
   res.status(200).json({
     message: "Login successful and welcome back " + user.name + "!",

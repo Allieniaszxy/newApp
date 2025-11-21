@@ -8,35 +8,41 @@ import Footer from "./static/Footer";
 import AboutPage from "./pages/about/About";
 import Account from "./pages/account/Account";
 import { UserData } from "./context/UserContext";
+import Loading from "./components/reusable/loading/Loading";
+import "./App.css";
 
 function App() {
-  const { isAuthenticated, user } = UserData();
+  const { isAuthenticated, user, loading } = UserData();
   return (
     <>
-      <BrowserRouter>
-        <Header isAuthenticated={isAuthenticated} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route
-            path="/account"
-            element={isAuthenticated ? <Account user={user} /> : <Login />}
-          />
-          <Route
-            path="/login"
-            element={isAuthenticated ? <Home /> : <Login />}
-          />
-          <Route
-            path="/register"
-            element={isAuthenticated ? <Home /> : <Register />}
-          />
-          <Route
-            path="/verify"
-            element={isAuthenticated ? <Home /> : <Verify />}
-          />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
+      {loading ? (
+        <Loading />
+      ) : (
+        <BrowserRouter>
+          <Header isAuthenticated={isAuthenticated} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route
+              path="/account"
+              element={isAuthenticated ? <Account user={user} /> : <Login />}
+            />
+            <Route
+              path="/login"
+              element={isAuthenticated ? <Home /> : <Login />}
+            />
+            <Route
+              path="/register"
+              element={isAuthenticated ? <Home /> : <Register />}
+            />
+            <Route
+              path="/verify"
+              element={isAuthenticated ? <Home /> : <Verify />}
+            />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      )}
     </>
   );
 }

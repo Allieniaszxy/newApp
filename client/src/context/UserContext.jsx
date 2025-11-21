@@ -6,12 +6,13 @@ import toast, { Toaster } from "react-hot-toast";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null);
   const [btnLoading, setBtnLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   //   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   async function loginUser(email, password, navigate) {
+    setBtnLoading(true);
     try {
       const { data } = await axios.post(`${server}/users/login`, {
         email,
@@ -28,15 +29,15 @@ export const UserProvider = ({ children }) => {
     } catch (error) {
       setIsAuthenticated(false);
       setLoading(false);
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message);
       console.error("Login failed", error);
     }
   }
   async function fetchUser() {
     try {
-      const { data } = await axios.post(`${server}/users/profile`, {
+      const { data } = await axios.get(`${server}/users/profile`, {
         headers: {
-          token: localStorage.getItem("token"),
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setUser(data.user);
@@ -45,12 +46,54 @@ export const UserProvider = ({ children }) => {
     } catch (error) {
       setIsAuthenticated(false);
       setLoading(false);
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message);
       console.error("signup failed", error);
+    } finally {
+      setLoading(false);
     }
   }
+  async function registerUser(name, email, password, navigate) {
+    setBtnLoading(true);
+    try {
+      const { data } = await axios.post(`${server}/users/register`, {
+        name,
+        email,
+        password,
+      });
+
+      toast.success(data.message);
+      localStorage.setItem("activationToken", data.activationToken);
+      setBtnLoading(false);
+      navigate("/verify");
+      return data;
+    } catch (error) {
+      setBtnLoading(false);
+      toast.error(error?.response?.data?.message);
+      console.error("Login failed", error);
+    }
+  }
+
+  async function verifyOtp(otp, navigate) {
+    setBtnLoading(true);
+    const activationToken = localStorage.getItem("activationToken");
+    try {
+      const { data } = await axios.post(`${server}/users/verify`, {
+        otp,
+        activationToken,
+      });
+
+      toast.success(data.message);
+      navigate("/login");
+      localStorage.clear();
+      setBtnLoading(false);
+    } catch (error) {
+      setBtnLoading(false);
+      toast.error(error?.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
-    fetchUser;
+    fetchUser();
   }, []);
 
   return (
@@ -63,6 +106,8 @@ export const UserProvider = ({ children }) => {
         setIsAuthenticated,
         loginUser,
         loading,
+        registerUser,
+        verifyOtp,
       }}
     >
       {children}

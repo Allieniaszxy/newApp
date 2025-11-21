@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../../components/reusable/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserData } from "../../context/UserContext";
 
 const Register = () => {
+  const { btnLoading, registerUser } = UserData(); // ✅ FIXED
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await registerUser(name, email, password, navigate);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-center h-[80vh] ">
         <div className="p-7 rounded-lg shadow-md text-center w-[300px] max-md:w-[90%]">
           <h2 className="text-xl text-blue-400 mb-3">Register</h2>
-          <form action="" className="text-left">
+          <form action="" className="text-left" onSubmit={handleSubmit}>
             <label
               htmlFor="name"
               className=" block mb-1 text-[14px] text-[#333]"
@@ -20,6 +32,8 @@ const Register = () => {
               placeholder="Enter your name"
               required
               className="w-full p-2.5 mb-2.5 rounded border-[1px solid #ccc]"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
 
             <label
@@ -33,6 +47,8 @@ const Register = () => {
               placeholder="Enter your email"
               required
               className="w-full p-2.5 mb-2.5 rounded border-[1px solid #ccc]"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
 
             <label
@@ -46,15 +62,19 @@ const Register = () => {
               placeholder="Enter your password"
               required
               className="w-full p-2.5 mb-2.5 rounded border-[1px solid #ccc]"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
-              title="Register"
+              type="submit"
+              title={btnLoading ? "Please wait..." : "Register"}
               bgColor="#2563eb"
               color="#fff"
               padding="5px 10px"
               margin="10px 0"
               className="rounded-lg hover:bg-blue-600"
               onClick={() => {}}
+              disabled={btnLoading}
             />
           </form>
           <p>
