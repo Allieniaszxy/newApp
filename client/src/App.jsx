@@ -10,6 +10,7 @@ import Account from "./pages/account/Account";
 import { UserData } from "./context/UserContext";
 import Loading from "./components/reusable/loading/Loading";
 import "./App.css";
+import Courses from "./pages/course/Courses";
 
 function App() {
   const { isAuthenticated, user, loading } = UserData();
@@ -23,6 +24,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/courses" element={<Courses />} />
             <Route
               path="/account"
               element={isAuthenticated ? <Account user={user} /> : <Login />}
