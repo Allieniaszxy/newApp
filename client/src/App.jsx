@@ -11,6 +11,7 @@ import { UserData } from "./context/UserContext";
 import Loading from "./components/reusable/loading/Loading";
 import "./App.css";
 import Courses from "./pages/course/Courses";
+import CourseDescription from "./pages/courseDescription/CourseDescription";
 
 function App() {
   const { isAuthenticated, user, loading } = UserData();
@@ -40,6 +41,12 @@ function App() {
             <Route
               path="/verify"
               element={isAuthenticated ? <Home /> : <Verify />}
+            />
+            <Route
+              path="/course/:id"
+              element={
+                isAuthenticated ? <CourseDescription user={user} /> : <Login />
+              }
             />
           </Routes>
           <Footer />
